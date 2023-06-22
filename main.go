@@ -19,11 +19,14 @@ func main() {
 	if err != nil {
 		log.Fatal("Database Connection Failed")
 	}
+	contactRepository := contact.NewRepository(db)
+	contactService := contact.NewService(contactRepository)
+	contactHandler := handler.NewContactHandler(contactService)
 	router := gin.Default()
 
-	router.GET("/contact", handler.GetContact)
-	router.GET("/contact/:id", handler.GetContactById)
-	router.POST("/contact", handler.CreateContact)
+	router.GET("/contact", contactHandler.GetContact)
+	router.GET("/contact/:id", contactHandler.GetContactById)
+	router.POST("/contact", contactHandler.CreateContact)
 	router.Run()
 
 }

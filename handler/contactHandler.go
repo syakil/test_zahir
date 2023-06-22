@@ -8,21 +8,29 @@ import (
 	"test-zahir/contact"
 )
 
-func GetContact(c *gin.Context) {
+type contactHandler struct {
+	contactService contact.Service
+}
+
+func NewContactHandler(contactService contact.Service) *contactHandler {
+	return &contactHandler{contactService}
+}
+
+func (handler *contactHandler) GetContact(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"nama": "syakil",
 	})
 }
 
-func GetContactById(c *gin.Context) {
+func (handler *contactHandler) GetContactById(c *gin.Context) {
 	id := c.Param("id")
 	c.JSON(http.StatusOK, gin.H{
 		"id": id,
 	})
 }
 
-func CreateContact(c *gin.Context) {
-	var contacts contact.Contact
+func (handler *contactHandler) CreateContact(c *gin.Context) {
+	var contacts contact.ContactData
 
 	err := c.ShouldBindJSON(&contacts)
 	if err != nil {
