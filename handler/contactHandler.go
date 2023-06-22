@@ -70,3 +70,46 @@ func (handler *contactHandler) CreateContact(c *gin.Context) {
 		"data": contactResponse,
 	})
 }
+
+func (handler *contactHandler) DeleteContact(c *gin.Context) {
+	id := c.Param("id")
+	_, err := handler.contactService.Delete(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Delete Data Success",
+	})
+}
+
+func (handler *contactHandler) UpdateContact(c *gin.Context) {
+	var contactRequest contact.ContactRequest
+
+	err := c.ShouldBindJSON(&contactRequest)
+	if err != nil {
+		var errorMessages []string
+		for _, e := range err.(validator.ValidationErrors) {
+			errorMessage := fmt.Sprintf("Error on field %s , condition:%s", e.Field(), e.ActualTag())
+			errorMessages = append(errorMessages, errorMessage)
+		}
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error":   true,
+			"message": errorMessages,
+		})
+		return
+	}
+	id := c.Param("id")
+	contactResponse, err := handler.contactService.Update(id, contactRequest)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"data": contactResponse,
+	})
+}

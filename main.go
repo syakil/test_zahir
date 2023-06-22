@@ -27,6 +27,8 @@ func main() {
 	router.GET("/contact", contactHandler.GetContact)
 	router.GET("/contact/:id", contactHandler.GetContactById)
 	router.POST("/contact", contactHandler.CreateContact)
+	router.DELETE("/contact/:id", contactHandler.DeleteContact)
+	router.PUT("/contact/:id", contactHandler.UpdateContact)
 	router.Run()
 
 }

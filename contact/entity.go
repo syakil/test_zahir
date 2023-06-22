@@ -1,9 +1,12 @@
 package contact
 
-import "time"
+import (
+	uuid "github.com/satori/go.uuid"
+	"time"
+)
 
 type ContactData struct {
-	Id        string
+	Id        uuid.UUID `sql:"type:uuid;primary_key;default:uuid_generate_v4()"`
 	Name      string
 	Gender    string
 	Phone     string
