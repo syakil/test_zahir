@@ -86,9 +86,9 @@ func (handler *contactHandler) DeleteContact(c *gin.Context) {
 }
 
 func (handler *contactHandler) UpdateContact(c *gin.Context) {
-	var contactRequest contact.ContactRequest
+	var contactUpdate contact.ContactUpdate
 
-	err := c.ShouldBindJSON(&contactRequest)
+	err := c.ShouldBindJSON(&contactUpdate)
 	if err != nil {
 		var errorMessages []string
 		for _, e := range err.(validator.ValidationErrors) {
@@ -102,7 +102,7 @@ func (handler *contactHandler) UpdateContact(c *gin.Context) {
 		return
 	}
 	id := c.Param("id")
-	contactResponse, err := handler.contactService.Update(id, contactRequest)
+	contactResponse, err := handler.contactService.Update(id, contactUpdate)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err,

@@ -7,7 +7,7 @@ type Service interface {
 	FindById(ID string) (ContactData, error)
 	Create(contact ContactRequest) (ContactData, error)
 	Delete(ID string) (ContactData, error)
-	Update(ID string, contact ContactRequest) (ContactData, error)
+	Update(ID string, contact ContactUpdate) (ContactData, error)
 }
 
 type service struct {
@@ -45,7 +45,7 @@ func (s *service) Delete(ID string) (ContactData, error) {
 	return contact, err
 }
 
-func (s *service) Update(ID string, request ContactRequest) (ContactData, error) {
+func (s *service) Update(ID string, request ContactUpdate) (ContactData, error) {
 	contact, err := s.repository.FindById(ID)
 	contact.Name = request.Name
 	contact.Gender = request.Gender
