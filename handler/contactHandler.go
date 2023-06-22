@@ -17,22 +17,36 @@ func NewContactHandler(contactService contact.Service) *contactHandler {
 }
 
 func (handler *contactHandler) GetContact(c *gin.Context) {
+	contactResponse, err := handler.contactService.FindAll()
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err,
+		})
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{
-		"nama": "syakil",
+		"data": contactResponse,
 	})
 }
 
 func (handler *contactHandler) GetContactById(c *gin.Context) {
 	id := c.Param("id")
+	contactResponse, err := handler.contactService.FindById(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err,
+		})
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{
-		"id": id,
+		"data": contactResponse,
 	})
 }
 
 func (handler *contactHandler) CreateContact(c *gin.Context) {
-	var contacts contact.ContactData
+	var contactRequest contact.ContactRequest
 
-	err := c.ShouldBindJSON(&contacts)
+	err := c.ShouldBindJSON(&contactRequest)
 	if err != nil {
 		var errorMessages []string
 		for _, e := range err.(validator.ValidationErrors) {
@@ -45,14 +59,14 @@ func (handler *contactHandler) CreateContact(c *gin.Context) {
 		})
 		return
 	}
-
+	contactResponse, err := handler.contactService.Create(contactRequest)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err,
+		})
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{
-		"id":         contacts.Id,
-		"name":       contacts.Name,
-		"gender":     contacts.Gender,
-		"phone":      contacts.Phone,
-		"email":      contacts.Email,
-		"created_at": contacts.CreatedAt,
-		"updated_at": contacts.UpdatedAt,
+		"data": contactResponse,
 	})
 }

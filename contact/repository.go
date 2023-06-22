@@ -22,7 +22,7 @@ func (r *repository) FindAll() ([]ContactData, error) {
 	return contact, err
 }
 
-func (r *repository) FindByI(ID string) (ContactData, error) {
+func (r *repository) FindById(ID string) (ContactData, error) {
 	var contact ContactData
 	err := r.db.Find(&contact, ID).Error
 	return contact, err
